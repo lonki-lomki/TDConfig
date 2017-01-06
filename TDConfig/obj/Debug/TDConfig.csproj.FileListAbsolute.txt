@@ -1,0 +1,9 @@
+F:\Work\Sharp\TDConfig\TDConfig\bin\Debug\TDConfig.exe.config
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.csprojResolveAssemblyReference.cache
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.Properties.Resources.resources
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.csproj.GenerateResource.Cache
+F:\Work\Sharp\TDConfig\TDConfig\bin\Debug\TDConfig.exe
+F:\Work\Sharp\TDConfig\TDConfig\bin\Debug\TDConfig.pdb
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.exe
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.pdb
+F:\Work\Sharp\TDConfig\TDConfig\obj\Debug\TDConfig.Form1.resources
