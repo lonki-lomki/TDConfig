@@ -36,5 +36,11 @@ namespace TDConfig
             treeNode = new TreeNode("Dot Net Perls", array);
             treeView1.Nodes.Add(treeNode);
         }
+
+        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            //MessageBox(e.Node.Name);
+            textBox1.Text = e.Node.Text;
+        }
     }
 }
