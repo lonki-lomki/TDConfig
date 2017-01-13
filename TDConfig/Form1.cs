@@ -41,7 +41,7 @@ namespace TDConfig
         {
             //MessageBox(e.Node.Name);
             //textBox1.Text = e.Node.Text;
-
+            /*
             // Очистить старое содержимое таблицы
             tableLayoutPanel1.Controls.Clear();
 
@@ -73,6 +73,7 @@ namespace TDConfig
                 tableLayoutPanel1.Controls.Add(new Label() { Text = "Наименование" }, 0, 1);
                 tableLayoutPanel1.Controls.Add(new Label() { Text = "Уровень с боссом" }, 1, 1);
             }
+            */
 
         }
     }
