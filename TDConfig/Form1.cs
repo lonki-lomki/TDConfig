@@ -35,6 +35,9 @@ namespace TDConfig
 
             treeNode = new TreeNode("Уровни", array);
             treeView1.Nodes.Add(treeNode);
+
+            listView1.Columns.Add("Параметр");
+            listView1.Columns.Add("Значение");
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -74,6 +77,23 @@ namespace TDConfig
                 tableLayoutPanel1.Controls.Add(new Label() { Text = "Уровень с боссом" }, 1, 1);
             }
             */
+
+            listView1.Items.Clear();
+
+            ListViewItem lvi;
+
+            if (e.Node.Text == "Уровень 1")
+            {
+                lvi = listView1.Items.Add("Наименование");
+                //listView1.Items.Add("Обучающий уровень");
+                lvi.SubItems.Add("Обучающий уровень");
+            }
+            if (e.Node.Text == "Уровень 2")
+            {
+                lvi = listView1.Items.Add("Наименование");
+                //listView1.Items.Add("Уровень с боссом");
+                lvi.SubItems.Add("Уровень с боссом");
+            }
 
         }
     }
