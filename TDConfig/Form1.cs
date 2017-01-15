@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace TDConfig
 {
     public partial class Form1 : Form
     {
+
+        private int selectedColumn;
+
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +21,7 @@ namespace TDConfig
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Настройка TreeView
             TreeNode treeNode = new TreeNode("Башни");
             treeView1.Nodes.Add(treeNode);
 
@@ -36,47 +35,29 @@ namespace TDConfig
             treeNode = new TreeNode("Уровни", array);
             treeView1.Nodes.Add(treeNode);
 
+            // Настройка ListView
+            listView1.Clear();
             listView1.Columns.Add("Параметр");
             listView1.Columns.Add("Значение");
+
+            // TODO: тестовое наполнение
+            listView1.Items.Add("Параметр 1");
+            listView1.Items.Add("Параметр 2");
+            listView1.Items.Add("Параметр 3");
+
+            // Добавить значения параметров
+            for(int i=0; i<listView1.Items.Count; i++)
+            {
+                listView1.Items[i].SubItems.Add("" + i);
+            }
+
+            listView1.FullRowSelect = true;
+            listView1.GridLines = true;
+            
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            //MessageBox(e.Node.Name);
-            //textBox1.Text = e.Node.Text;
-            /*
-            // Очистить старое содержимое таблицы
-            tableLayoutPanel1.Controls.Clear();
-
-            // Установить количество строк и столбцов
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.RowCount = 2;
-
-            // Размеры строк и столбцов
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            //tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0.0f));
-            //tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0.0f));
-            tableLayoutPanel1.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            //tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-
-            // Добавить элементы в ячейки таблицы
-            tableLayoutPanel1.Controls.Add(new Label() { Text = "Элемент" }, 0, 0);
-            tableLayoutPanel1.Controls.Add(new Label() { Text = e.Node.Text }, 1, 0);
-
-            if (e.Node.Text == "Уровень 1")
-            {
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Наименование" }, 0, 1);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Обучающий уровень" }, 1, 1);
-            }
-
-            if (e.Node.Text == "Уровень 2")
-            {
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Наименование" }, 0, 1);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Уровень с боссом" }, 1, 1);
-            }
-            */
 
             listView1.Items.Clear();
 
@@ -95,6 +76,67 @@ namespace TDConfig
                 lvi.SubItems.Add("Уровень с боссом");
             }
 
+        }
+
+        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+            // TODO: не работает! Надо установить значение поля Tag для сабитемов
+
+            ListViewHitTestInfo hit = listView1.HitTest(e.X, e.Y);
+            foreach (ListViewItem item in listView1.Items)
+            {
+                if (item.Selected == true)
+                {
+                    for (int i=0; i<item.SubItems.Count; i++)
+                    {
+                        if (hit.SubItem.Tag == item.SubItems[i].Tag)
+                        {
+                            selectedColumn = i;
+                            // Первую колонку не редактируем!
+                            if (selectedColumn == 0)
+                            {
+                                return;
+                            }
+                            // Установить параметры поля редактирования текста
+                            textBox1.Left = listView1.Left + hit.SubItem.Bounds.Left + 3;
+                            textBox1.Top = listView1.Top + hit.SubItem.Bounds.Top;
+                            textBox1.Width = hit.SubItem.Bounds.Width;
+                            textBox1.Text = hit.SubItem.Text;
+                            textBox1.Visible = true;
+                            textBox1.SelectAll();
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Убрать фокус ввода когда нажата клавиша Enter
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                textBox1_LostFocus(sender, null);
+            }
+        }
+
+        private void textBox1_LostFocus(object sender, EventArgs e)
+        {
+            string selectDetail;
+
+            // Убрать TextBox
+            textBox1.Visible = false;
+            // Сохранить старое значение (то, что было до редактирования)
+            selectDetail = listView1.SelectedItems[0].SubItems[selectedColumn].Text;
+            // Сравнить старое и новое значения
+            if (selectDetail.Equals(textBox1.Text) == false)
+            {
+                // Значения различаются, можно заменить
+                listView1.Items[listView1.SelectedItems[0].Index].SubItems[selectedColumn].Text = textBox1.Text;
+                // TODO: Установить флаг необходимости сохранения значений
+                // needSave = true;
+            }
         }
     }
 }
