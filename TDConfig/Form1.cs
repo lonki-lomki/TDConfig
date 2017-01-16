@@ -48,7 +48,8 @@ namespace TDConfig
             // Добавить значения параметров
             for(int i=0; i<listView1.Items.Count; i++)
             {
-                listView1.Items[i].SubItems.Add("" + i);
+                ListViewItem.ListViewSubItem lvsi = listView1.Items[i].SubItems.Add("" + i);
+                lvsi.Tag = (object)("" + i);
             }
 
             listView1.FullRowSelect = true;
@@ -67,13 +68,15 @@ namespace TDConfig
             {
                 lvi = listView1.Items.Add("Наименование");
                 //listView1.Items.Add("Обучающий уровень");
-                lvi.SubItems.Add("Обучающий уровень");
+                ListViewItem.ListViewSubItem lvsi = lvi.SubItems.Add("Обучающий уровень");
+                lvsi.Tag = lvsi.Text;
             }
             if (e.Node.Text == "Уровень 2")
             {
                 lvi = listView1.Items.Add("Наименование");
                 //listView1.Items.Add("Уровень с боссом");
-                lvi.SubItems.Add("Уровень с боссом");
+                ListViewItem.ListViewSubItem lvsi = lvi.SubItems.Add("Уровень с боссом");
+                lvsi.Tag = lvsi.Text;
             }
 
         }
@@ -104,6 +107,7 @@ namespace TDConfig
                             textBox1.Width = hit.SubItem.Bounds.Width;
                             textBox1.Text = hit.SubItem.Text;
                             textBox1.Visible = true;
+                            textBox1.Focus();
                             textBox1.SelectAll();
                         }
                     }
@@ -117,6 +121,12 @@ namespace TDConfig
             // Убрать фокус ввода когда нажата клавиша Enter
             if (e.KeyChar == (char)Keys.Return)
             {
+                textBox1_LostFocus(sender, null);
+            }
+
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                textBox1.Text = listView1.Items[listView1.SelectedItems[0].Index].SubItems[selectedColumn].Text;
                 textBox1_LostFocus(sender, null);
             }
         }
