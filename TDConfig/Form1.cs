@@ -11,7 +11,6 @@ namespace TDConfig
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -19,8 +18,15 @@ namespace TDConfig
             Application.Exit();
         }
 
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: загрузка информации из файловой системы
+
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            /*
             // Настройка TreeView
             TreeNode treeNode = new TreeNode("Башни");
             treeView1.Nodes.Add(treeNode);
@@ -54,12 +60,13 @@ namespace TDConfig
 
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
+            */
             
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-
+            /*
             listView1.Items.Clear();
 
             ListViewItem lvi;
@@ -78,13 +85,11 @@ namespace TDConfig
                 ListViewItem.ListViewSubItem lvsi = lvi.SubItems.Add("Уровень с боссом");
                 lvsi.Tag = lvsi.Text;
             }
-
+            */
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
-            // TODO: не работает! Надо установить значение поля Tag для сабитемов
 
             ListViewHitTestInfo hit = listView1.HitTest(e.X, e.Y);
             foreach (ListViewItem item in listView1.Items)
@@ -148,5 +153,7 @@ namespace TDConfig
                 // needSave = true;
             }
         }
+
+
     }
 }
