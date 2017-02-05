@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace TDConfig
@@ -20,7 +22,74 @@ namespace TDConfig
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: загрузка информации из файловой системы
+            TreeNode treeNode;
+
+            // TODO: загрузка информации из файловой системы - построить дерево
+            string topDir = "TDGame";
+            // Получение списка файлов в указанном каталоге
+            // возвращает данные в таком виде: "TDGame\\monsters.txt"
+            string[] files = Directory.GetFiles(topDir);
+
+            //string item = "";
+
+            // Цикл по файлам основного каталога
+            foreach(string s in files)
+            {
+                // Выделить из пути имя файла
+                string filename = Path.GetFileName(s);
+
+                if(filename.StartsWith("monsters"))
+                {
+                    // Загрузка списка монстров
+                    // TODO построчное чтение файла и формирование объектов-монстров
+                    // Загрузить все строки из файла в массив строк
+                    //string[] lines = File.ReadAllLines(filename);
+                    string content = File.ReadAllText(filename);
+
+                    List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
+
+                    ...
+
+
+
+
+                    treeNode = new TreeNode(filename);
+                    treeView1.Nodes.Add(treeNode);
+                }
+                if (filename.StartsWith("towers"))
+                {
+                    // Загрузка списка башен
+                    // TODO ...
+                    treeNode = new TreeNode(filename);
+                    treeView1.Nodes.Add(treeNode);
+                }
+            }
+
+            // Получение списка вложенных каталогов
+            string[] dirs = Directory.GetDirectories(topDir);
+
+            // Цикл по списку найденных каталогов
+            foreach(string s in dirs)
+            {
+                // Выделить из пути имя файла
+                string filename = Path.GetFileName(s);
+
+                if (filename.StartsWith("Levels"))
+                {
+                    treeNode = new TreeNode(filename);
+                    treeView1.Nodes.Add(treeNode);
+
+                    // TODO: чтение файлов в данном каталоге
+                    string[] files2 = Directory.GetFiles(s);
+                    foreach(string s2 in files2)
+                    {
+                        string filename2 = Path.GetFileName(s2);
+                        treeNode = new TreeNode(filename2);
+                        treeView1.Nodes.Add(treeNode);
+                    }
+                }
+
+            }
 
         }
 
