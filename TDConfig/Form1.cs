@@ -44,9 +44,11 @@ namespace TDConfig
                     // TODO построчное чтение файла и формирование объектов-монстров
                     // Загрузить все строки из файла в массив строк
                     //string[] lines = File.ReadAllLines(filename);
-                    string content = File.ReadAllText(filename);
+                    string content = File.ReadAllText(s);
 
                     List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
+
+                    // TODO: список монстров получен, сформировать иерархию для отображения в дереве
 
                     ...
 
