@@ -41,29 +41,46 @@ namespace TDConfig
                 if(filename.StartsWith("monsters"))
                 {
                     // Загрузка списка монстров
-                    // TODO построчное чтение файла и формирование объектов-монстров
-                    // Загрузить все строки из файла в массив строк
-                    //string[] lines = File.ReadAllLines(filename);
+                    // Загрузить весь файл в одну строковую переменную
                     string content = File.ReadAllText(s);
 
+                    // Разбор содержимого файла
                     List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
 
-                    // TODO: список монстров получен, сформировать иерархию для отображения в дереве
+                    // список монстров получен, сформировать иерархию для отображения в дереве
+                    TreeNode[] array = new TreeNode[monsters.Count];
 
-                    ...
+                    for(int i=0; i<monsters.Count; i++)
+                    {
+                        TreeNode node = new TreeNode(monsters[i].name);
+                        array[i] = node;
+                    }
 
-
-
-
-                    treeNode = new TreeNode(filename);
-                    treeView1.Nodes.Add(treeNode);
+                    // Добавить ветку монстров в общее дерево
+                    TreeNode monsters_node = new TreeNode("Монстры", array);
+                    treeView1.Nodes.Add(monsters_node);
                 }
                 if (filename.StartsWith("towers"))
                 {
                     // Загрузка списка башен
-                    // TODO ...
-                    treeNode = new TreeNode(filename);
-                    treeView1.Nodes.Add(treeNode);
+                    // Загрузить весь файл в одну строковую переменную
+                    string content = File.ReadAllText(s);
+
+                    // Разбор содержимого файла
+                    List<TowerStruct> towers = UtilsParse.ParseList<TowerStruct>(TowerStruct.Parse, content);
+
+                    // список монстров получен, сформировать иерархию для отображения в дереве
+                    TreeNode[] array = new TreeNode[towers.Count];
+
+                    for (int i = 0; i < towers.Count; i++)
+                    {
+                        TreeNode node = new TreeNode(towers[i].name);
+                        array[i] = node;
+                    }
+
+                    // Добавить ветку монстров в общее дерево
+                    TreeNode towers_node = new TreeNode("Монстры", array);
+                    treeView1.Nodes.Add(towers_node);
                 }
             }
 

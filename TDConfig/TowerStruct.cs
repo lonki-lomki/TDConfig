@@ -29,5 +29,14 @@ namespace TDConfig
             res += "<towerNextType:" + nextTowerType + ">";
             return res;
         }
+
+        // Десериализация из строки
+        public static TowerStruct Parse(string value)
+        {
+            // value = "<towerName:tower1><towerDescription:First Tower><towerElement:Fire><towerDamage:1><towerDamageRadius:3><towerDamageFreq:2><towerBulletSpeed:3><towerTileType:><towerCost:50><towerNextType:tower2>"
+            TowerStruct ret = new TowerStruct();
+
+            return ret;
+        }
     }
 }
