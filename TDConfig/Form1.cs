@@ -8,6 +8,9 @@ namespace TDConfig
     public partial class Form1 : Form
     {
 
+        // TODO: в корневом каталоге настроек создать файл game.ini, который открывать через меню File-Load
+        // TODO: редактирование параметров монстров
+
         private int selectedColumn;
 
         public Form1()
@@ -79,7 +82,7 @@ namespace TDConfig
                     }
 
                     // Добавить ветку монстров в общее дерево
-                    TreeNode towers_node = new TreeNode("Монстры", array);
+                    TreeNode towers_node = new TreeNode("Башни", array);
                     treeView1.Nodes.Add(towers_node);
                 }
             }
@@ -95,40 +98,29 @@ namespace TDConfig
 
                 if (filename.StartsWith("Levels"))
                 {
-                    treeNode = new TreeNode(filename);
-                    treeView1.Nodes.Add(treeNode);
-
-                    // TODO: чтение файлов в данном каталоге
+                    // чтение файлов в данном каталоге (в каждом отдельном файле - описание одного уровня)
                     string[] files2 = Directory.GetFiles(s);
-                    foreach(string s2 in files2)
+
+                    // Массив для создания иерархии в дереве
+                    TreeNode[] array = new TreeNode[files2.Length];
+                    int i = 0;
+                    // Цикл по файлам, найденным в каталоге
+                    foreach (string s2 in files2)
                     {
-                        string filename2 = Path.GetFileName(s2);
+                        string filename2 = Path.GetFileNameWithoutExtension(s2);
                         treeNode = new TreeNode(filename2);
-                        treeView1.Nodes.Add(treeNode);
+                        array[i++] = treeNode;
                     }
+                    // Поместить сформированный список в иерархию
+                    treeNode = new TreeNode("Уровни", array);
+                    treeView1.Nodes.Add(treeNode);
                 }
-
             }
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             /*
-            // Настройка TreeView
-            TreeNode treeNode = new TreeNode("Башни");
-            treeView1.Nodes.Add(treeNode);
-
-            treeNode = new TreeNode("Монстры");
-            treeView1.Nodes.Add(treeNode);
-
-            TreeNode node2 = new TreeNode("Уровень 1");
-            TreeNode node3 = new TreeNode("Уровень 2");
-            TreeNode[] array = new TreeNode[] { node2, node3 };
-
-            treeNode = new TreeNode("Уровни", array);
-            treeView1.Nodes.Add(treeNode);
-
             // Настройка ListView
             listView1.Clear();
             listView1.Columns.Add("Параметр");

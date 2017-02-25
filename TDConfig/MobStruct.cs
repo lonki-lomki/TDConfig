@@ -57,7 +57,6 @@ namespace TDConfig
                         ret.exp = float.Parse(p[1]);
                         break;
                 }
-
             }
             return ret;
         }
