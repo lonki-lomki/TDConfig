@@ -8,10 +8,12 @@ namespace TDConfig
     public partial class Form1 : Form
     {
 
-        // TODO: в корневом каталоге настроек создать файл game.ini, который открывать через меню File-Load
         // TODO: редактирование параметров монстров
+        // TODO: всплывающее меню по правой кнопке
 
         private int selectedColumn;
+
+        ContextMenuStrip popupMenu;
 
         public Form1()
         {
@@ -23,103 +25,121 @@ namespace TDConfig
             Application.Exit();
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode treeNode;
 
-            // TODO: загрузка информации из файловой системы - построить дерево
-            string topDir = "TDGame";
-            // Получение списка файлов в указанном каталоге
-            // возвращает данные в таком виде: "TDGame\\monsters.txt"
-            string[] files = Directory.GetFiles(topDir);
-
-            //string item = "";
-
-            // Цикл по файлам основного каталога
-            foreach(string s in files)
+            // Открыть диалог выбора файла
+            openFileDialog1.InitialDirectory = Environment.CurrentDirectory;
+            DialogResult result = openFileDialog1.ShowDialog();
+            // Проверить результат выполнения диалога
+            if (result == DialogResult.OK)
             {
-                // Выделить из пути имя файла
-                string filename = Path.GetFileName(s);
+                // загрузка информации из файловой системы - построить дерево
+                //string topDir = "TDGame";
+                string topDir = Path.GetDirectoryName(openFileDialog1.FileName);
+                // Получение списка файлов в указанном каталоге
+                // возвращает данные в таком виде: "TDGame\\monsters.txt"
+                string[] files = Directory.GetFiles(topDir);
 
-                if(filename.StartsWith("monsters"))
+                // Цикл по файлам основного каталога
+                foreach (string s in files)
                 {
-                    // Загрузка списка монстров
-                    // Загрузить весь файл в одну строковую переменную
-                    string content = File.ReadAllText(s);
+                    // Выделить из пути имя файла
+                    string filename = Path.GetFileName(s);
 
-                    // Разбор содержимого файла
-                    List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
-
-                    // список монстров получен, сформировать иерархию для отображения в дереве
-                    TreeNode[] array = new TreeNode[monsters.Count];
-
-                    for(int i=0; i<monsters.Count; i++)
+                    if (filename.StartsWith("monsters"))
                     {
-                        TreeNode node = new TreeNode(monsters[i].name);
-                        array[i] = node;
-                    }
+                        // Загрузка списка монстров
+                        // Загрузить весь файл в одну строковую переменную
+                        string content = File.ReadAllText(s);
 
-                    // Добавить ветку монстров в общее дерево
-                    TreeNode monsters_node = new TreeNode("Монстры", array);
-                    treeView1.Nodes.Add(monsters_node);
+                        // Разбор содержимого файла
+                        List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
+
+                        // список монстров получен, сформировать иерархию для отображения в дереве
+                        TreeNode[] array = new TreeNode[monsters.Count];
+
+                        for (int i = 0; i < monsters.Count; i++)
+                        {
+                            TreeNode node = new TreeNode(monsters[i].name);
+                            array[i] = node;
+                        }
+
+                        // Добавить ветку монстров в общее дерево
+                        TreeNode monsters_node = new TreeNode("Монстры", array);
+                        treeView1.Nodes.Add(monsters_node);
+                    }
+                    if (filename.StartsWith("towers"))
+                    {
+                        // Загрузка списка башен
+                        // Загрузить весь файл в одну строковую переменную
+                        string content = File.ReadAllText(s);
+
+                        // Разбор содержимого файла
+                        List<TowerStruct> towers = UtilsParse.ParseList<TowerStruct>(TowerStruct.Parse, content);
+
+                        // список монстров получен, сформировать иерархию для отображения в дереве
+                        TreeNode[] array = new TreeNode[towers.Count];
+
+                        for (int i = 0; i < towers.Count; i++)
+                        {
+                            TreeNode node = new TreeNode(towers[i].name);
+                            array[i] = node;
+                        }
+
+                        // Добавить ветку монстров в общее дерево
+                        TreeNode towers_node = new TreeNode("Башни", array);
+                        treeView1.Nodes.Add(towers_node);
+                    }
                 }
-                if (filename.StartsWith("towers"))
+
+                // Получение списка вложенных каталогов
+                string[] dirs = Directory.GetDirectories(topDir);
+
+                // Цикл по списку найденных каталогов
+                foreach (string s in dirs)
                 {
-                    // Загрузка списка башен
-                    // Загрузить весь файл в одну строковую переменную
-                    string content = File.ReadAllText(s);
+                    // Выделить из пути имя файла
+                    string filename = Path.GetFileName(s);
 
-                    // Разбор содержимого файла
-                    List<TowerStruct> towers = UtilsParse.ParseList<TowerStruct>(TowerStruct.Parse, content);
-
-                    // список монстров получен, сформировать иерархию для отображения в дереве
-                    TreeNode[] array = new TreeNode[towers.Count];
-
-                    for (int i = 0; i < towers.Count; i++)
+                    if (filename.StartsWith("Levels"))
                     {
-                        TreeNode node = new TreeNode(towers[i].name);
-                        array[i] = node;
+                        // чтение файлов в данном каталоге (в каждом отдельном файле - описание одного уровня)
+                        string[] files2 = Directory.GetFiles(s);
+
+                        // Массив для создания иерархии в дереве
+                        TreeNode[] array = new TreeNode[files2.Length];
+                        int i = 0;
+                        // Цикл по файлам, найденным в каталоге
+                        foreach (string s2 in files2)
+                        {
+                            string filename2 = Path.GetFileNameWithoutExtension(s2);
+                            treeNode = new TreeNode(filename2);
+                            array[i++] = treeNode;
+                        }
+                        // Поместить сформированный список в иерархию
+                        treeNode = new TreeNode("Уровни", array);
+                        treeView1.Nodes.Add(treeNode);
                     }
-
-                    // Добавить ветку монстров в общее дерево
-                    TreeNode towers_node = new TreeNode("Башни", array);
-                    treeView1.Nodes.Add(towers_node);
-                }
-            }
-
-            // Получение списка вложенных каталогов
-            string[] dirs = Directory.GetDirectories(topDir);
-
-            // Цикл по списку найденных каталогов
-            foreach(string s in dirs)
-            {
-                // Выделить из пути имя файла
-                string filename = Path.GetFileName(s);
-
-                if (filename.StartsWith("Levels"))
-                {
-                    // чтение файлов в данном каталоге (в каждом отдельном файле - описание одного уровня)
-                    string[] files2 = Directory.GetFiles(s);
-
-                    // Массив для создания иерархии в дереве
-                    TreeNode[] array = new TreeNode[files2.Length];
-                    int i = 0;
-                    // Цикл по файлам, найденным в каталоге
-                    foreach (string s2 in files2)
-                    {
-                        string filename2 = Path.GetFileNameWithoutExtension(s2);
-                        treeNode = new TreeNode(filename2);
-                        array[i++] = treeNode;
-                    }
-                    // Поместить сформированный список в иерархию
-                    treeNode = new TreeNode("Уровни", array);
-                    treeView1.Nodes.Add(treeNode);
                 }
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Создать контекстное меню
+            popupMenu = new ContextMenuStrip();
+            popupMenu.Text = "Контекстное меню";
+
+            ToolStripMenuItem item = new ToolStripMenuItem("Add");
+            item.Text = "Add";
+
+            popupMenu.Items.Add(item);
+
+            treeView1.ContextMenuStrip = popupMenu;
+            popupMenu.Show();
+
             /*
             // Настройка ListView
             listView1.Clear();
@@ -233,7 +253,6 @@ namespace TDConfig
                 // needSave = true;
             }
         }
-
 
     }
 }
