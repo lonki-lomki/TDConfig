@@ -15,6 +15,8 @@ namespace TDConfig
 
         ContextMenuStrip popupMenu;
 
+        List<MobStruct> monsters;
+
         public Form1()
         {
             InitializeComponent();
@@ -55,7 +57,7 @@ namespace TDConfig
                         string content = File.ReadAllText(s);
 
                         // Разбор содержимого файла
-                        List<MobStruct> monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
+                        monsters = UtilsParse.ParseList<MobStruct>(MobStruct.Parse, content);
 
                         // список монстров получен, сформировать иерархию для отображения в дереве
                         TreeNode[] array = new TreeNode[monsters.Count];
@@ -166,26 +168,29 @@ namespace TDConfig
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            /*
+            
             listView1.Items.Clear();
 
             ListViewItem lvi;
+            ListViewItem.ListViewSubItem lvsi;
 
-            if (e.Node.Text == "Уровень 1")
+            // TODO: отладка!!!!!
+
+            if (e.Node.Parent != null && "Монстры".Equals(e.Node.Parent.Name))
             {
-                lvi = listView1.Items.Add("Наименование");
-                //listView1.Items.Add("Обучающий уровень");
-                ListViewItem.ListViewSubItem lvsi = lvi.SubItems.Add("Обучающий уровень");
-                lvsi.Tag = lvsi.Text;
+                MobStruct ms;
+                // Поиск моба в списк по наименованию
+                int idx = monsters.FindIndex(item => item.name.Equals(e.Node.Name));
+
+                if (idx != -1)
+                {
+                    ms = monsters[idx];
+                    lvi = listView1.Items.Add("Наименование");
+                    lvsi = lvi.SubItems.Add(ms.name);
+                    lvsi.Tag = lvsi.Text;
+                }
             }
-            if (e.Node.Text == "Уровень 2")
-            {
-                lvi = listView1.Items.Add("Наименование");
-                //listView1.Items.Add("Уровень с боссом");
-                ListViewItem.ListViewSubItem lvsi = lvi.SubItems.Add("Уровень с боссом");
-                lvsi.Tag = lvsi.Text;
-            }
-            */
+                                    
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
