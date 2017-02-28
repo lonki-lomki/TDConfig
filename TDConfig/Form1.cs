@@ -17,6 +17,8 @@ namespace TDConfig
 
         List<MobStruct> monsters;
 
+        List<TowerStruct> towers;
+
         public Form1()
         {
             InitializeComponent();
@@ -79,7 +81,7 @@ namespace TDConfig
                         string content = File.ReadAllText(s);
 
                         // Разбор содержимого файла
-                        List<TowerStruct> towers = UtilsParse.ParseList<TowerStruct>(TowerStruct.Parse, content);
+                        towers = UtilsParse.ParseList<TowerStruct>(TowerStruct.Parse, content);
 
                         // список монстров получен, сформировать иерархию для отображения в дереве
                         TreeNode[] array = new TreeNode[towers.Count];
@@ -142,27 +144,14 @@ namespace TDConfig
             treeView1.ContextMenuStrip = popupMenu;
             popupMenu.Show();
 
-            /*
+            
             // Настройка ListView
             listView1.Clear();
             listView1.Columns.Add("Параметр");
             listView1.Columns.Add("Значение");
 
-            // TODO: тестовое наполнение
-            listView1.Items.Add("Параметр 1");
-            listView1.Items.Add("Параметр 2");
-            listView1.Items.Add("Параметр 3");
-
-            // Добавить значения параметров
-            for(int i=0; i<listView1.Items.Count; i++)
-            {
-                ListViewItem.ListViewSubItem lvsi = listView1.Items[i].SubItems.Add("" + i);
-                lvsi.Tag = (object)("" + i);
-            }
-
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
-            */
             
         }
 
@@ -174,23 +163,71 @@ namespace TDConfig
             ListViewItem lvi;
             ListViewItem.ListViewSubItem lvsi;
 
-            // TODO: отладка!!!!!
-
-            if (e.Node.Parent != null && "Монстры".Equals(e.Node.Parent.Name))
+            if (e.Node.Parent != null && "Монстры".Equals(e.Node.Parent.Text))
             {
                 MobStruct ms;
                 // Поиск моба в списк по наименованию
-                int idx = monsters.FindIndex(item => item.name.Equals(e.Node.Name));
+                int idx = monsters.FindIndex(item => item.name.Equals(e.Node.Text));
 
                 if (idx != -1)
                 {
                     ms = monsters[idx];
+
                     lvi = listView1.Items.Add("Наименование");
                     lvsi = lvi.SubItems.Add(ms.name);
                     lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Скорость");
+                    lvsi = lvi.SubItems.Add(""+ms.speed);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("ХП");
+                    lvsi = lvi.SubItems.Add("" + ms.hp);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Урон");
+                    lvsi = lvi.SubItems.Add("" + ms.damage);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Опыт");
+                    lvsi = lvi.SubItems.Add("" + ms.exp);
+                    lvsi.Tag = lvsi.Text;
                 }
             }
-                                    
+
+            if (e.Node.Parent != null && "Башни".Equals(e.Node.Parent.Text))
+            {
+                TowerStruct ts;
+                // Поиск башни в списк по наименованию
+                int idx = towers.FindIndex(item => item.name.Equals(e.Node.Text));
+
+                if (idx != -1)
+                {
+                    ms = monsters[idx];
+
+                    lvi = listView1.Items.Add("Наименование");
+                    lvsi = lvi.SubItems.Add(ms.name);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Скорость");
+                    lvsi = lvi.SubItems.Add("" + ms.speed);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("ХП");
+                    lvsi = lvi.SubItems.Add("" + ms.hp);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Урон");
+                    lvsi = lvi.SubItems.Add("" + ms.damage);
+                    lvsi.Tag = lvsi.Text;
+
+                    lvi = listView1.Items.Add("Опыт");
+                    lvsi = lvi.SubItems.Add("" + ms.exp);
+                    lvsi.Tag = lvsi.Text;
+                }
+            }
+
+
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
